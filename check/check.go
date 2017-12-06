@@ -1,10 +1,10 @@
 package check
 
 import (
-	"github.com/laincloud/bindmon/check/tcp"
-	"strings"
-	"github.com/laincloud/bindmon/check/udp"
 	"github.com/laincloud/bindmon/check/http"
+	"github.com/laincloud/bindmon/check/tcp"
+	"github.com/laincloud/bindmon/check/udp"
+	"strings"
 )
 
 func Check(line string) bool {

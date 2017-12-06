@@ -2,11 +2,11 @@ package tcp
 
 import (
 	"flag"
+	"log"
 	"net"
 	"strconv"
-	"time"
 	"strings"
-	"log"
+	"time"
 )
 
 func Check(line string) bool {
@@ -14,9 +14,9 @@ func Check(line string) bool {
 	var CommandLine = flag.NewFlagSet(arguments[0], flag.ExitOnError)
 	var host string
 	var port, timeout int
-	CommandLine.StringVar(&host,"H","","")
-	CommandLine.IntVar(&port,"p",0,"")
-	CommandLine.IntVar(&timeout,"t",10,"")
+	CommandLine.StringVar(&host, "H", "", "")
+	CommandLine.IntVar(&port, "p", 0, "")
+	CommandLine.IntVar(&timeout, "t", 10, "")
 	CommandLine.Parse(arguments[1:])
 	t, err := time.ParseDuration(strconv.Itoa(timeout) + "s")
 	if err != nil {

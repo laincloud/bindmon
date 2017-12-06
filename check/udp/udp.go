@@ -2,11 +2,11 @@ package udp
 
 import (
 	"flag"
+	"log"
 	"net"
 	"strconv"
-	"time"
 	"strings"
-	"log"
+	"time"
 )
 
 func Check(line string) bool {

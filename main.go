@@ -13,9 +13,9 @@ func main() {
 	dst := flag.String("dst", "", "")
 	pid := flag.String("pid", "", "")
 	flag.Parse()
-	log.Println("src is "+*src)
-	log.Println("dst is "+*dst)
-	log.Println("pid is "+*pid)
+	log.Println("src is " + *src)
+	log.Println("dst is " + *dst)
+	log.Println("pid is " + *pid)
 	files, _ := ioutil.ReadDir(*src)
 	for _, fi := range files {
 		if fi.IsDir() {
@@ -26,5 +26,5 @@ func main() {
 		}
 	}
 	ch := make(chan int)
-	<- ch
+	<-ch
 }

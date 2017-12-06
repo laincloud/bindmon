@@ -25,7 +25,7 @@ func Check(line string) bool {
 	client := http.Client{
 		Timeout: t,
 	}
-	_,err = client.Get("http://" + *host + ":" + strconv.Itoa(*port) + *url)
+	_, err = client.Get("http://" + *host + ":" + strconv.Itoa(*port) + *url)
 	if err != nil {
 		log.Println(err)
 		return false
