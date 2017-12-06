@@ -1,0 +1,6 @@
+hash: 6fc85cf698b016ba9d81352807406e19b81dfd4b8eab501a0b58926484ba836e
+updated: 2017-12-06T18:33:52.819468+08:00
+imports:
+- name: github.com/facebookgo/pidfile
+  version: f242e2999868dcd267a2b86e49ce1f9cf9e15b16
+testImports: []

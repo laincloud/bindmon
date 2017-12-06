@@ -1,0 +1,60 @@
+This plugin tests TCP connections with the specified host (or unix socket).
+
+Usage:
+check_tcp -H host -p port [-w <warning time>] [-c <critical time>] [-s <send string>]
+[-e <expect string>] [-q <quit string>][-m <maximum bytes>] [-d <delay>]
+[-t <timeout seconds>] [-r <refuse state>] [-M <mismatch state>] [-v] [-4|-6] [-j]
+[-D <warn days cert expire>[,<crit days cert expire>]] [-S <use SSL>] [-E]
+
+Options:
+ -h, --help
+    Print detailed help screen
+ -V, --version
+    Print version information
+ --extra-opts=[section][@file]
+    Read options from an ini file. See
+    https://www.monitoring-plugins.org/doc/extra-opts.html
+    for usage and examples.
+ -H, --hostname=ADDRESS
+    Host name, IP Address, or unix socket (must be an absolute path)
+ -p, --port=INTEGER
+    Port number (default: none)
+ -4, --use-ipv4
+    Use IPv4 connection
+ -6, --use-ipv6
+    Use IPv6 connection
+ -E, --escape
+    Can use \n, \r, \t or \\ in send or quit string. Must come before send or quit option
+    Default: nothing added to send, \r\n added to end of quit
+ -s, --send=STRING
+    String to send to the server
+ -e, --expect=STRING
+    String to expect in server response (may be repeated)
+ -A, --all
+    All expect strings need to occur in server response. Default is any
+ -q, --quit=STRING
+    String to send server to initiate a clean close of the connection
+ -r, --refuse=ok|warn|crit
+    Accept TCP refusals with states ok, warn, crit (default: crit)
+ -M, --mismatch=ok|warn|crit
+    Accept expected string mismatches with states ok, warn, crit (default: warn)
+ -j, --jail
+    Hide output from TCP socket
+ -m, --maxbytes=INTEGER
+    Close connection once more than this number of bytes are received
+ -d, --delay=INTEGER
+    Seconds to wait between sending string and polling for response
+ -D, --certificate=INTEGER[,INTEGER]
+    Minimum number of days a certificate has to be valid.
+    1st is #days for warning, 2nd is critical (if not specified - 0).
+ -S, --ssl
+    Use SSL for the connection.
+ -w, --warning=DOUBLE
+    Response time to result in warning status (seconds)
+ -c, --critical=DOUBLE
+    Response time to result in critical status (seconds)
+ -t, --timeout=INTEGER
+    Seconds before connection times out (default: 10)
+ -v, --verbose
+    Show details for command-line debugging (output may be truncated by
+    the monitoring system)

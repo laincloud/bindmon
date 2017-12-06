@@ -1,0 +1,26 @@
+$TTL 3h
+
+example.com.  IN  SOA ns.example.com. 2016010101 21600 3600 1209600 300
+
+@             IN  NS    ns.example.com.
+
+;begin-monitor
+ns1            IN A 192.0.2.1 ;check_tcp -H 192.0.2.1 -p 80
+ns1            IN A 192.0.2.2 ;check_tcp -H 192.0.2.1 -p 80
+ns1            IN A 192.0.2.3 ;check_tcp -H 192.0.2.3 -p 80
+ns1            IN A 192.0.2.4 ;check_tcp -H 192.0.2.4 -p 80
+;end-monitor
+
+;begin-monitor
+ns2            IN A 192.0.2.1 ;check_http -H 192.0.2.1
+ns2            IN A 192.0.2.2 ;check_http -H 192.0.2.2
+ns2            IN A 192.0.2.3 ;check_http -H 192.0.2.3
+ns2            IN A 192.0.2.4 ;check_http -H 192.0.2.4
+;end-monitor
+
+;begin-monitor
+ns3            IN A 192.0.2.1 ;check_udp -H 192.0.2.1 -p 80
+ns3            IN A 192.0.2.2 ;check_udp -H 192.0.2.1 -p 80
+ns3            IN A 192.0.2.3 ;check_udp -H 192.0.2.3 -p 80
+ns3            IN A 192.0.2.4 ;check_udp -H 192.0.2.4 -p 80
+;end-monitor
