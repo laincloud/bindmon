@@ -5,7 +5,6 @@ import (
 	"github.com/laincloud/bindmon/monitor"
 	"io/ioutil"
 	"log"
-	"time"
 )
 
 func main() {
@@ -26,7 +25,6 @@ func main() {
 			go m.Mon()
 		}
 	}
-	for {
-		time.Sleep(time.Hour)
-	}
+	ch := make(chan int)
+	<- ch
 }
