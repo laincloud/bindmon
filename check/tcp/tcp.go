@@ -10,7 +10,8 @@ import (
 )
 
 func Check(line string) bool {
-	arguments := strings.Split(line[strings.Index(line, ";check_tcp ")+1:], " ")
+	line = line[strings.Index(line, ";check_tcp ")+1:]
+	arguments := strings.Split(line, " ")
 	var CommandLine = flag.NewFlagSet(arguments[0], flag.ExitOnError)
 	var host string
 	var port, timeout int
@@ -21,10 +22,11 @@ func Check(line string) bool {
 	t := time.Duration(timeout) * time.Second
 	conn, err := net.DialTimeout("tcp", host+":"+strconv.Itoa(port), t)
 	if err != nil {
-		log.Println(err)
+		log.Println(line + "ko")
 		return false
 	} else {
 		defer conn.Close()
+		log.Println(line + "ok")
 		return true
 	}
 }
