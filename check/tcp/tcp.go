@@ -22,11 +22,11 @@ func Check(line string) bool {
 	t := time.Duration(timeout) * time.Second
 	conn, err := net.DialTimeout("tcp", host+":"+strconv.Itoa(port), t)
 	if err != nil {
-		log.Println(line + "ko")
+		log.Println(line + " ko")
 		return false
 	} else {
 		defer conn.Close()
-		log.Println(line + "ok")
+		log.Println(line + " ok")
 		return true
 	}
 }

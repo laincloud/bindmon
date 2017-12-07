@@ -24,9 +24,9 @@ func Check(line string) bool {
 	}
 	_, err := client.Get("http://" + *host + ":" + strconv.Itoa(*port) + *url)
 	if err != nil {
-		log.Println(line + "ko")
+		log.Println(line + " ko")
 		return false
 	}
-	log.Println(line + "ok")
+	log.Println(line + " ok")
 	return true
 }
