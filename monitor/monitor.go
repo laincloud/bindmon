@@ -59,6 +59,7 @@ func file2lines(filePath string) []string {
 }
 
 func (m *Monitor) check(begin int, end int) {
+	defer m.wg.Done()
 	for i := begin + 1; i < end; i++ {
 		now := check.Check(m.lines[i])
 		if now {
@@ -75,7 +76,6 @@ func (m *Monitor) check(begin int, end int) {
 			}
 		}
 	}
-	m.wg.Done()
 }
 
 func (m *Monitor) write() {
