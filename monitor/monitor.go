@@ -3,30 +3,29 @@ package monitor
 import (
 	"bufio"
 	"fmt"
-	"github.com/facebookgo/pidfile"
 	"github.com/laincloud/bindmon/check"
 	"log"
 	"os"
 	"strings"
-	"syscall"
-	"time"
+	"sync"
 )
 
 type Monitor struct {
-	src    string
-	dst    string
-	pid    string
-	lines  []string
-	health []bool
+	src     string
+	dst     string
+	lines   []string
+	health  []bool
+	rewrite bool
+	wg      sync.WaitGroup
 }
 
-func NewMonitor(src string, dst string, pid string) *Monitor {
+func NewMonitor(src string, dst string) *Monitor {
 	m := &Monitor{
-		src:    src,
-		dst:    dst,
-		pid:    pid,
-		lines:  file2lines(src),
-		health: make([]bool, len(file2lines(src))),
+		src:     src,
+		dst:     dst,
+		lines:   file2lines(src),
+		health:  make([]bool, len(file2lines(src))),
+		rewrite: false,
 	}
 
 	for i := 0; i < len(m.health); i++ {
@@ -54,28 +53,25 @@ func file2lines(filePath string) []string {
 	if err := scanner.Err(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}
-
 	return lines
 }
 
-func (m *Monitor) check(begin int, end int) {
-	for {
-		reload := false
-		for i := begin + 1; i < end; i++ {
-			now := check.Check(m.lines[i])
-			if m.health[i] != now {
-				reload = true
-				m.health[i] = now
-			}
+func (m *Monitor) check(begin int, end int) bool {
+	reload := false
+	for i := begin + 1; i < end; i++ {
+		now := check.Check(m.lines[i])
+		if m.health[i] != now {
+			reload = true
+			m.rewrite = true
+			m.health[i] = now
 		}
-		if reload {
-			m.reload()
-		}
-		time.Sleep(time.Minute)
 	}
+	m.wg.Done()
+	return reload
 }
 
-func (m *Monitor) reload() {
+func (m *Monitor) write() {
+	log.Println("start write " + m.dst)
 	var file *os.File
 	begin := -1
 	tmp := 0
@@ -107,18 +103,9 @@ func (m *Monitor) reload() {
 			}
 		}
 	}
-	pidfile.SetPidfilePath(m.pid)
-	pid, err := pidfile.Read()
-	if err != nil {
-		log.Println(err)
-	}
-	err = syscall.Kill(pid, syscall.SIGHUP)
-	if err != nil {
-		log.Println(err)
-	}
 }
 
-func (m *Monitor) Mon() {
+func (m *Monitor) Mon(ch chan int) {
 	log.Println("start monitor src " + m.src + " dst " + m.dst)
 	begin := -1
 	for i, line := range m.lines {
@@ -127,9 +114,17 @@ func (m *Monitor) Mon() {
 		}
 		if line == ";end-monitor" {
 			if begin != -1 && i > begin+1 {
+				m.wg.Add(1)
 				go m.check(begin, i)
 			}
 			begin = -1
 		}
+	}
+	m.wg.Wait()
+	if m.rewrite {
+		m.write()
+		ch <- 1
+	} else {
+		ch <- 0
 	}
 }
