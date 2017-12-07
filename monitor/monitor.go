@@ -60,12 +60,16 @@ func file2lines(filePath string) []string {
 
 func (m *Monitor) check(begin int, end int) {
 	for {
+		reload := false
 		for i := begin + 1; i < end; i++ {
 			now := check.Check(m.lines[i])
 			if m.health[i] != now {
+				reload = true
 				m.health[i] = now
-				m.reload()
 			}
+		}
+		if reload {
+			m.reload()
 		}
 		time.Sleep(time.Minute)
 	}
@@ -116,7 +120,6 @@ func (m *Monitor) reload() {
 
 func (m *Monitor) Mon() {
 	log.Println("start monitor src " + m.src + " dst " + m.dst)
-	m.reload()
 	begin := -1
 	for i, line := range m.lines {
 		if line == ";begin-monitor" {
