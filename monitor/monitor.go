@@ -132,6 +132,7 @@ func (m *Monitor) Mon(ch chan int) {
 	if m.rewrite {
 		m.write()
 		ch <- 1
+		m.rewrite = false
 	} else {
 		ch <- 0
 	}
