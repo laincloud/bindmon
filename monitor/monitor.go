@@ -104,7 +104,7 @@ func (m *Monitor) write() {
 			tmp = 0
 			continue
 		}
-		if m.health[i] >= 0 {
+		if m.health[i] > -m.fall {
 			file.WriteString(strings.TrimSpace(line) + "\n")
 			if begin > -1 {
 				tmp += 1
