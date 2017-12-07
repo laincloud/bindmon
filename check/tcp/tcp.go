@@ -16,7 +16,7 @@ func Check(line string) bool {
 	var port, timeout int
 	CommandLine.StringVar(&host, "H", "", "")
 	CommandLine.IntVar(&port, "p", 0, "")
-	CommandLine.IntVar(&timeout, "t", 2, "")
+	CommandLine.IntVar(&timeout, "t", 3, "")
 	CommandLine.Parse(arguments[1:])
 	t := time.Duration(timeout) * time.Second
 	conn, err := net.DialTimeout("tcp", host+":"+strconv.Itoa(port), t)

@@ -15,7 +15,7 @@ func Check(line string) bool {
 	host := CommandLine.String("H", "", "")
 	port := CommandLine.Int("p", 80, "")
 	url := CommandLine.String("u", "/", "")
-	timeout := CommandLine.Int("t", 2, "")
+	timeout := CommandLine.Int("t", 3, "")
 	CommandLine.Parse(arguments[1:])
 	t := time.Duration(*timeout) * time.Second
 	client := http.Client{
