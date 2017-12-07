@@ -15,6 +15,7 @@ func main() {
 	src := flag.String("src", "", "")
 	dst := flag.String("dst", "", "")
 	pid := flag.String("pid", "", "")
+	fall := flag.Int("fall", 3, "")
 	flag.Parse()
 	log.Println("src is " + *src)
 	log.Println("dst is " + *dst)
@@ -30,7 +31,7 @@ func main() {
 			continue
 		} else {
 			count++
-			m := monitor.NewMonitor(*src+"/"+fi.Name(), *dst+"/"+fi.Name())
+			m := monitor.NewMonitor(*src+"/"+fi.Name(), *dst+"/"+fi.Name(), *fall)
 			monitors = append(monitors, *m)
 		}
 	}

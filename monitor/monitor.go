@@ -14,22 +14,24 @@ type Monitor struct {
 	src     string
 	dst     string
 	lines   []string
-	health  []bool
+	health  []int
 	rewrite bool
 	wg      sync.WaitGroup
+	fall    int
 }
 
-func NewMonitor(src string, dst string) *Monitor {
+func NewMonitor(src string, dst string, fall int) *Monitor {
 	m := &Monitor{
 		src:     src,
 		dst:     dst,
+		fall:    fall,
 		lines:   file2lines(src),
-		health:  make([]bool, len(file2lines(src))),
+		health:  make([]int, len(file2lines(src))),
 		rewrite: false,
 	}
 
 	for i := 0; i < len(m.health); i++ {
-		m.health[i] = true
+		m.health[i] = 0
 	}
 
 	return m
@@ -56,18 +58,24 @@ func file2lines(filePath string) []string {
 	return lines
 }
 
-func (m *Monitor) check(begin int, end int) bool {
-	reload := false
+func (m *Monitor) check(begin int, end int) {
 	for i := begin + 1; i < end; i++ {
 		now := check.Check(m.lines[i])
-		if m.health[i] != now {
-			reload = true
-			m.rewrite = true
-			m.health[i] = now
+		if now {
+			if m.health[i] < 0 {
+				m.health[i] = 0
+				m.rewrite = true
+			}
+		} else {
+			if m.health[i] > -m.fall {
+				m.health[i]--
+				if m.health[i] == -m.fall {
+					m.rewrite = true
+				}
+			}
 		}
 	}
 	m.wg.Done()
-	return reload
 }
 
 func (m *Monitor) write() {
@@ -96,7 +104,7 @@ func (m *Monitor) write() {
 			tmp = 0
 			continue
 		}
-		if m.health[i] {
+		if m.health[i] >= 0 {
 			file.WriteString(strings.TrimSpace(line) + "\n")
 			if begin > -1 {
 				tmp += 1
